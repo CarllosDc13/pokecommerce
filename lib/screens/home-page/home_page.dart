@@ -106,7 +106,7 @@ class HomePageState extends State<HomePage> {
                     var info = AppController.instance.pokeinfo.firstWhere(
                         (pi) => (pi.name ?? '') == item.name,
                         orElse: () => Pokeinfo());
-                    return ItemEcommerce(item: item, itemInfo: info);
+                    return ItemEcommerce(name: item.name, image: info.sprites?.frontDefault);
                   }).toList() ??
                   [],
             )),
@@ -116,13 +116,14 @@ class HomePageState extends State<HomePage> {
 }
 
 class ItemEcommerce extends StatelessWidget {
-  const ItemEcommerce({super.key, this.item, this.itemInfo});
+  const ItemEcommerce({super.key, this.name, this.image});
 
-  final PokeGet? item;
-  final Pokeinfo? itemInfo;
+  final String? name;
+  final String? image;
 
   @override
   Widget build(BuildContext context) {
+    print(image);
     return Container(
         width: double.infinity,
         margin: const EdgeInsets.fromLTRB(5, 10, 5, 10),
@@ -130,13 +131,13 @@ class ItemEcommerce extends StatelessWidget {
         child: Row(
           children: [
             Image.network(
-              'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png',
+              image ?? 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png',
               height: 75,
               width: 75,
             ),
             Container(
               child: Row(
-                children: [Text(item?.name ?? '')],
+                children: [Text(name ?? '')],
               ),
             )
           ],

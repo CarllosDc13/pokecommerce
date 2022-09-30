@@ -20,7 +20,6 @@ class ThemeDefault extends ChangeNotifier {
     themeType = tT;
     switch (tT) {
       case ThemeType.pokeBall:
-        print('passei aqui');
         primaryColor = Color.fromARGB(255, 237, 28, 36);
         secondaryColor = Color.fromARGB(255, 255, 255, 255);
         backgroundThemeColor = Color.fromARGB(255, 235, 235, 235);

@@ -30,8 +30,9 @@ class AppController extends ChangeNotifier {
 
     var pokemons = storage.getItem('pokemons');
 
+      print(pokemons);
     if (pokemons != null && pokemons['count'] == response.count) {
-      pokeGenericResponse = pokemons as PokeGenericResponse;
+      pokeGenericResponse = PokeGenericResponse.fromJson(pokemons);
     } else if (offset <= pokeGenericResponse.count) {
       var nOffset = offset + 100;
       await getLinks(limit: 100, offset: nOffset);
