@@ -1,6 +1,24 @@
+import 'package:flutter/animation.dart';
 import 'package:pokecommerce/entity/pokeget.dart';
 
 export 'package:pokecommerce/entity/pokeget.dart';
+
+class PokeType {
+  String type = "";
+  Color? color;
+  TextColor textColor = TextColor.black;
+
+  PokeType({
+    this.color,
+    this.type = "",
+    this.textColor = TextColor.black,
+  });
+}
+
+enum TextColor {
+  white,
+  black,
+}
 
 class PokeGenericResponse {
   final int count;
@@ -41,7 +59,7 @@ class PokeGenericResponse {
     };
   }
 
- factory PokeGenericResponse.joinToRecursiveData(
+  factory PokeGenericResponse.joinToRecursiveData(
       PokeGenericResponse obj, PokeGenericResponse objLinked) {
     return PokeGenericResponse(
         count: objLinked.count,

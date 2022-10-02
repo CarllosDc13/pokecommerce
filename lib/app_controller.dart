@@ -15,7 +15,7 @@ class AppController extends ChangeNotifier {
   ThemeDefault themeDefault = ThemeDefault();
   ThemeType type = ThemeType.poke;
   PokeGenericResponse pokeGenericResponse = PokeGenericResponse();
-  List<Pokeinfo> pokeinfo = [];
+  List<Pokeinfo> pokeinfos = [];
 
   alterTheme(ThemeType type_) {
     themeDefault.alterTheme(type_);
@@ -30,7 +30,6 @@ class AppController extends ChangeNotifier {
 
     var pokemons = storage.getItem('pokemons');
 
-      print(pokemons);
     if (pokemons != null && pokemons['count'] == response.count) {
       pokeGenericResponse = PokeGenericResponse.fromJson(pokemons);
     } else if (offset <= pokeGenericResponse.count) {
@@ -39,23 +38,33 @@ class AppController extends ChangeNotifier {
       return;
     }
 
-    storage.setItem('pokemons', pokeGenericResponse);
-    onNotifyListeners();
+    List<Pokeinfo> pkInfos = (await storage.getItem('pokeinfos') as List).map((obj) => Pokeinfo.fromJson(obj)).toList();
+    pkInfos = await getPokeinfosByUrl(pokeGenericResponse.results
+            ?.sublist(0, 20)
+            .where((element) => pkInfos.any((pkIf) => element.name != pkIf.name))
+            .map((e) => e.url)
+            .toList() ??
+        []);
+
+    print('pkInfos');
+
+    await storage.setItem('pokeinfos', pkInfos);
+    await storage.setItem('pokemons', pokeGenericResponse);
+
+    pokeinfos.addAll(pkInfos);
+
+    notifyListeners();
   }
 
-  onNotifyListeners() => notifyListeners();
+  Future<List<Pokeinfo>> getPokeinfosByUrl(List<String> urls) async {
+    List<Pokeinfo> pokeinfos_ = [];
 
-  getPokeinfos(List<String> names) async {
-    var pokeinfos_ = ([]) as List;
+    for (String url in urls) {
+      await _apiRepository
+          .getPokemonByUrl(url)
+          .then((value) => pokeinfos_.add(value));
+    }
 
-    names
-        .where((name) => pokeinfos_.any((pokeinfo) => pokeinfo['name'] != name))
-        .forEach((name) async {
-      pokeinfo.add(await _apiRepository.getPokemonByName(name));
-    });
-
-    // storage.setItem('pokeinfos', pokeinfo);
-
-    onNotifyListeners();
+    return pokeinfos_;
   }
 }

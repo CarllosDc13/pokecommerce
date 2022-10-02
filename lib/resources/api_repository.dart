@@ -17,6 +17,11 @@ class ApiRepository {
     return response;
   }
 
+  Future<Pokeinfo> getPokemonByUrl(String url) async  {
+    var response = await _provider.getPokemonByUrl(url);
+    return response;
+  }
+
   // Future<List<DevModel>> fetchDevList() {
   //   return _provider.fetchDevList();
   // }

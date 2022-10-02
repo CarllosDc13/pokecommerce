@@ -5,7 +5,9 @@ class PokeGet {
   PokeGet({this.name = "", this.url = ""});
 
   factory PokeGet.fromJson(Map json) {
-    return PokeGet(name: json['name'], url: json['url']);
+    return PokeGet(
+        name: json['name'] != null ? json['name'] : "",
+        url: json['url'] != null ? json['url'] : "");
   }
 
   Map<String, dynamic> toJson() {

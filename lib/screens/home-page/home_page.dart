@@ -6,6 +6,7 @@ import 'package:pokecommerce/app_controller.dart';
 import 'package:pokecommerce/entity/pokeinfos.dart';
 import 'package:pokecommerce/themes/index.dart';
 import 'package:popover/popover.dart';
+import 'package:string_extensions/string_extensions.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -33,8 +34,6 @@ class HomePageState extends State<HomePage> {
     //           .toList() ??
     //       []);
     // }
-
-    print(_controller);
 
     String typeImg =
         AppController.instance.themeDefault.themeType.name.toLowerCase();
@@ -103,10 +102,11 @@ class HomePageState extends State<HomePage> {
               controller: _controller,
               children: (AppController.instance.pokeGenericResponse.results)
                       ?.map((item) {
-                    var info = AppController.instance.pokeinfo.firstWhere(
+                    var info = AppController.instance.pokeinfos.firstWhere(
                         (pi) => (pi.name ?? '') == item.name,
                         orElse: () => Pokeinfo());
-                    return ItemEcommerce(name: item.name, image: info.sprites?.frontDefault);
+                    return ItemEcommerce(
+                        name: item.name, image: info.sprites?.frontDefault);
                   }).toList() ??
                   [],
             )),
@@ -127,18 +127,27 @@ class ItemEcommerce extends StatelessWidget {
     return Container(
         width: double.infinity,
         margin: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.blueAccent),
+            borderRadius: BorderRadius.all(Radius.circular(15))),
         height: 105,
         child: Row(
           children: [
             Image.network(
-              image ?? 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png',
+              image ??
+                  'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png',
               height: 75,
-              width: 75,
+              width: 105,
             ),
-            Container(
-              child: Row(
-                children: [Text(name ?? '')],
-              ),
+            Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+                    child: Text(
+                  name.capitalize ?? '',
+                  style: const TextStyle(fontSize: 23, fontWeight: FontWeight.w600),
+                ))
+              ],
             )
           ],
         ));
@@ -156,34 +165,7 @@ class ListItems extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(8),
           children: [
-            InkWell(
-              onTap: () {
-                Navigator.of(context)
-                  ..pop()
-                  ..push(
-                    MaterialPageRoute<SecondRoute>(
-                      builder: (context) => SecondRoute(),
-                    ),
-                  );
-              },
-              child: Container(
-                height: 50,
-                color: Colors.amber[100],
-                child: const Center(child: Text('Entry A')),
-              ),
-            ),
             const Divider(),
-            Container(
-              height: 50,
-              color: Colors.amber[200],
-              child: const Center(child: Text('Entry B')),
-            ),
-            const Divider(),
-            Container(
-              height: 50,
-              color: Colors.amber[300],
-              child: const Center(child: Text('Entry C')),
-            ),
           ],
         ),
       ),

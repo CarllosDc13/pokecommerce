@@ -10,7 +10,8 @@ var urlGet = 'https://pokeapi.co/api/v2/pokemon';
 class ApiProvider {
   final Dio _dio = Dio();
 
-  Future<PokeGenericResponse> getPokemons({int? offset = 0, int? limit = 100}) async {
+  Future<PokeGenericResponse> getPokemons(
+      {int? offset = 0, int? limit = 100}) async {
     try {
       var response = await _dio.get('$urlGet?offset=$offset&limit=$limit');
       return PokeGenericResponse.fromJson(response.data);
@@ -24,6 +25,17 @@ class ApiProvider {
   Future<Pokeinfo> getPokemonByName(String name) async {
     try {
       var response = await _dio.get('$urlGet/$name');
+      return Pokeinfo.fromJson(response.data);
+    } catch (error, stacktrace) {
+      debugPrint("Exception occured: $error stackTrace: $stacktrace");
+
+      throw Exception(error);
+    }
+  }
+
+  Future<Pokeinfo> getPokemonByUrl(String url) async {
+    try {
+      var response = await _dio.get(url);
       return Pokeinfo.fromJson(response.data);
     } catch (error, stacktrace) {
       debugPrint("Exception occured: $error stackTrace: $stacktrace");
