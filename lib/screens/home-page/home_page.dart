@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:pokecommerce/components/pokeTag.dart';
 import 'package:pokecommerce/entity/pokeget.dart';
+import 'package:pokecommerce/screens/home-page/components/app_bar.dart';
 import 'package:pokecommerce/app_controller.dart';
 import 'package:pokecommerce/entity/pokeinfos.dart';
 import 'package:pokecommerce/themes/index.dart';
@@ -18,79 +20,17 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  final ScrollController _controller = ScrollController();
-
   @override
   Widget build(BuildContext context) {
-    if (AppController.instance.pokeGenericResponse.count == 0) {
+    if (AppController.instance.pokeGenericResponse.count  == 0) {
       AppController.instance.getLinks();
     }
-    // if ((AppController.instance.pokeGenericResponse.results?.length ?? 0) >=
-    //     AppController.instance.pokeGenericResponse.count) {
-    //   AppController.instance.getPokeinfos(AppController
-    //           .instance.pokeGenericResponse.results
-    //           ?.sublist(1, 20)
-    //           .map((e) => e.name)
-    //           .toList() ??
-    //       []);
-    // }
 
     String typeImg =
         AppController.instance.themeDefault.themeType.name.toLowerCase();
 
     return Scaffold(
-      appBar: AppBar(
-        title: GestureDetector(
-          child: Text(
-              'Pokecommerce ${AppController.instance.pokeGenericResponse.results?.length}'),
-          onTap: () {
-            AppController.instance.alterTheme(ThemeType.pokeBall);
-          },
-        ),
-        backgroundColor: AppController.instance.themeDefault.primaryColor,
-        actions: [
-          Container(
-            padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-            child: GestureDetector(
-              child: Image.asset(
-                "assets/images/$typeImg" "_bottom.png",
-                height: 37,
-                width: 37,
-              ),
-              onTap: () {
-                showPopover(
-                  context: context,
-                  transitionDuration: const Duration(milliseconds: 150),
-                  bodyBuilder: (context_) => const ListItems(),
-                  onPop: () => print('Popover was popped!'),
-                  direction: PopoverDirection.right,
-                  width: 200,
-                  height: 400,
-                  arrowHeight: 15,
-                  arrowWidth: 30,
-                );
-              },
-            ),
-          ),
-        ],
-        titleTextStyle: const TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.w900,
-          shadows: <Shadow>[
-            Shadow(
-              offset: Offset(-0.6, 1.1),
-              blurRadius: 3.0,
-              color: Color.fromARGB(255, 29, 44, 95),
-            ),
-            Shadow(
-              offset: Offset(-0.4, -0.1),
-              blurRadius: 1.0,
-              color: Color.fromARGB(255, 29, 44, 95),
-            ),
-          ],
-          fontSize: 25,
-        ),
-      ),
+      appBar: PokeAppBar(typeImg: typeImg),
       backgroundColor: AppController.instance.themeDefault.backgroundThemeColor,
       body: Container(
         width: double.infinity,
@@ -99,14 +39,15 @@ class HomePageState extends State<HomePage> {
         child: Align(
             alignment: Alignment.topCenter,
             child: ListView(
-              controller: _controller,
               children: (AppController.instance.pokeGenericResponse.results)
                       ?.map((item) {
                     var info = AppController.instance.pokeinfos.firstWhere(
                         (pi) => (pi.name ?? '') == item.name,
                         orElse: () => Pokeinfo());
                     return ItemEcommerce(
-                        name: item.name, image: info.sprites?.frontDefault);
+                        name: item.name,
+                        image: info.sprites?.frontDefault,
+                        pkTypes: info.types);
                   }).toList() ??
                   [],
             )),
@@ -116,14 +57,15 @@ class HomePageState extends State<HomePage> {
 }
 
 class ItemEcommerce extends StatelessWidget {
-  const ItemEcommerce({super.key, this.name, this.image});
+  const ItemEcommerce({super.key, this.name, this.image, this.pkTypes});
 
   final String? name;
   final String? image;
+  final List<PokeTypes>? pkTypes;
 
   @override
   Widget build(BuildContext context) {
-    print(image);
+    print(pkTypes?.map((e) => e.toJson()));
     return Container(
         width: double.infinity,
         margin: const EdgeInsets.fromLTRB(5, 10, 5, 10),
@@ -139,37 +81,35 @@ class ItemEcommerce extends StatelessWidget {
               height: 75,
               width: 105,
             ),
-            Column(
+            Container(
+                child: Column(
               children: [
                 Container(
-                  margin: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+                    margin: const EdgeInsets.fromLTRB(5, 10, 5, 10),
                     child: Text(
-                  name.capitalize ?? '',
-                  style: const TextStyle(fontSize: 23, fontWeight: FontWeight.w600),
-                ))
+                      name.capitalize ?? '',
+                      style: const TextStyle(
+                          fontSize: 23, fontWeight: FontWeight.w600),
+                    )),
+                Row(
+                    children: pkTypes?.map((type) {
+                          var pkType = AppController
+                              .instance.themeDefault.pokeTypesColors
+                              .singleWhere(
+                                  (pkColor) => pkColor.type == type.type?.name);
+                          return Container(
+                              margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                              child: PokeTag(
+                                text: type.type?.name,
+                                textColor: pkType.textColor.name,
+                                color: pkType.color,
+                              ));
+                        }).toList() ??
+                        [])
               ],
-            )
+            ))
           ],
         ));
-  }
-}
-
-class ListItems extends StatelessWidget {
-  const ListItems({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scrollbar(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: ListView(
-          padding: const EdgeInsets.all(8),
-          children: [
-            const Divider(),
-          ],
-        ),
-      ),
-    );
   }
 }
 

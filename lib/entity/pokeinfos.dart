@@ -1,23 +1,23 @@
 import 'package:pokecommerce/entity/index.dart';
 
 class Pokeinfo {
-  List<Abilities>? abilities;
+  List<PokeAbilities>? abilities;
   int? baseExperience;
   List<PokeGet>? forms;
-  List<GameIndices>? gameIndices;
+  List<PokeGameIndices>? gameIndices;
   int? height;
   List<PokeGet>? heldItems;
   int? id;
   bool? isDefault;
   String? locationAreaEncounters;
-  List<Moves>? moves;
+  List<PokeMoves>? moves;
   String? name;
   int? order;
-  List<PokeGet>? pastTypes;
-  Ability? species;
-  Sprites? sprites;
-  List<Stats>? stats;
-  List<Types>? types;
+  List<PokeGet>? pastPokeTypes;
+  PokeAbility? species;
+  PokeSprites? sprites;
+  List<PokeStats>? stats;
+  List<PokeTypes>? types;
   int? weight;
 
   Pokeinfo(
@@ -33,7 +33,7 @@ class Pokeinfo {
       this.moves,
       this.name,
       this.order,
-      this.pastTypes,
+      this.pastPokeTypes,
       this.species,
       this.sprites,
       this.stats,
@@ -42,9 +42,9 @@ class Pokeinfo {
 
   Pokeinfo.fromJson(Map<String, dynamic> json) {
     if (json['abilities'] != null) {
-      abilities = <Abilities>[];
+      abilities = <PokeAbilities>[];
       json['abilities'].forEach((v) {
-        abilities!.add(new Abilities.fromJson(v));
+        abilities!.add(new PokeAbilities.fromJson(v));
       });
     }
     baseExperience = json['base_experience'];
@@ -55,9 +55,9 @@ class Pokeinfo {
       });
     }
     if (json['game_indices'] != null) {
-      gameIndices = <GameIndices>[];
+      gameIndices = <PokeGameIndices>[];
       json['game_indices'].forEach((v) {
-        gameIndices!.add(new GameIndices.fromJson(v));
+        gameIndices!.add(new PokeGameIndices.fromJson(v));
       });
     }
     height = json['height'];
@@ -71,33 +71,34 @@ class Pokeinfo {
     isDefault = json['is_default'];
     locationAreaEncounters = json['location_area_encounters'];
     if (json['moves'] != null) {
-      moves = <Moves>[];
+      moves = <PokeMoves>[];
       json['moves'].forEach((v) {
-        moves!.add(new Moves.fromJson(v));
+        moves!.add(new PokeMoves.fromJson(v));
       });
     }
     name = json['name'];
     order = json['order'];
     if (json['past_types'] != null) {
-      pastTypes = <PokeGet>[];
+      pastPokeTypes = <PokeGet>[];
       json['past_types'].forEach((v) {
-        pastTypes!.add(new PokeGet.fromJson(v));
+        pastPokeTypes!.add(new PokeGet.fromJson(v));
       });
     }
-    species =
-        json['species'] != null ? new Ability.fromJson(json['species']) : null;
+    species = json['species'] != null
+        ? new PokeAbility.fromJson(json['species'])
+        : null;
     sprites =
-        json['sprites'] != null ? new Sprites.fromJson(json['sprites']) : null;
+        json['sprites'] != null ? new PokeSprites.fromJson(json['sprites']) : null;
     if (json['stats'] != null) {
-      stats = <Stats>[];
+      stats = <PokeStats>[];
       json['stats'].forEach((v) {
-        stats!.add(new Stats.fromJson(v));
+        stats!.add(new PokeStats.fromJson(v));
       });
     }
     if (json['types'] != null) {
-      types = <Types>[];
+      types = <PokeTypes>[];
       json['types'].forEach((v) {
-        types!.add(new Types.fromJson(v));
+        types!.add(new PokeTypes.fromJson(v));
       });
     }
     weight = json['weight'];
@@ -127,8 +128,8 @@ class Pokeinfo {
     }
     data['name'] = this.name;
     data['order'] = this.order;
-    if (this.pastTypes != null) {
-      data['past_types'] = this.pastTypes!.map((v) => v.toJson()).toList();
+    if (this.pastPokeTypes != null) {
+      data['past_types'] = this.pastPokeTypes!.map((v) => v.toJson()).toList();
     }
     if (this.species != null) {
       data['species'] = this.species!.toJson();
@@ -147,16 +148,17 @@ class Pokeinfo {
   }
 }
 
-class Abilities {
-  Ability? ability;
+class PokeAbilities {
+  PokeAbility? ability;
   bool? isHidden;
   int? slot;
 
-  Abilities({this.ability, this.isHidden, this.slot});
+  PokeAbilities({this.ability, this.isHidden, this.slot});
 
-  Abilities.fromJson(Map<String, dynamic> json) {
-    ability =
-        json['ability'] != null ? new Ability.fromJson(json['ability']) : null;
+  PokeAbilities.fromJson(Map<String, dynamic> json) {
+    ability = json['ability'] != null
+        ? new PokeAbility.fromJson(json['ability'])
+        : null;
     isHidden = json['is_hidden'];
     slot = json['slot'];
   }
@@ -172,13 +174,13 @@ class Abilities {
   }
 }
 
-class Ability {
+class PokeAbility {
   String? name;
   String? url;
 
-  Ability({this.name, this.url});
+  PokeAbility({this.name, this.url});
 
-  Ability.fromJson(Map<String, dynamic> json) {
+  PokeAbility.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     url = json['url'];
   }
@@ -191,16 +193,17 @@ class Ability {
   }
 }
 
-class GameIndices {
+class PokeGameIndices {
   int? gameIndex;
-  Ability? version;
+  PokeAbility? version;
 
-  GameIndices({this.gameIndex, this.version});
+  PokeGameIndices({this.gameIndex, this.version});
 
-  GameIndices.fromJson(Map<String, dynamic> json) {
+  PokeGameIndices.fromJson(Map<String, dynamic> json) {
     gameIndex = json['game_index'];
-    version =
-        json['version'] != null ? new Ability.fromJson(json['version']) : null;
+    version = json['version'] != null
+        ? new PokeAbility.fromJson(json['version'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -213,14 +216,14 @@ class GameIndices {
   }
 }
 
-class Moves {
-  Ability? move;
+class PokeMoves {
+  PokeAbility? move;
   List<VersionGroupDetails>? versionGroupDetails;
 
-  Moves({this.move, this.versionGroupDetails});
+  PokeMoves({this.move, this.versionGroupDetails});
 
-  Moves.fromJson(Map<String, dynamic> json) {
-    move = json['move'] != null ? new Ability.fromJson(json['move']) : null;
+  PokeMoves.fromJson(Map<String, dynamic> json) {
+    move = json['move'] != null ? new PokeAbility.fromJson(json['move']) : null;
     if (json['version_group_details'] != null) {
       versionGroupDetails = <VersionGroupDetails>[];
       json['version_group_details'].forEach((v) {
@@ -244,8 +247,8 @@ class Moves {
 
 class VersionGroupDetails {
   int? levelLearnedAt;
-  Ability? moveLearnMethod;
-  Ability? versionGroup;
+  PokeAbility? moveLearnMethod;
+  PokeAbility? versionGroup;
 
   VersionGroupDetails(
       {this.levelLearnedAt, this.moveLearnMethod, this.versionGroup});
@@ -253,10 +256,10 @@ class VersionGroupDetails {
   VersionGroupDetails.fromJson(Map<String, dynamic> json) {
     levelLearnedAt = json['level_learned_at'];
     moveLearnMethod = json['move_learn_method'] != null
-        ? new Ability.fromJson(json['move_learn_method'])
+        ? new PokeAbility.fromJson(json['move_learn_method'])
         : null;
     versionGroup = json['version_group'] != null
-        ? new Ability.fromJson(json['version_group'])
+        ? new PokeAbility.fromJson(json['version_group'])
         : null;
   }
 
@@ -273,7 +276,7 @@ class VersionGroupDetails {
   }
 }
 
-class Sprites {
+class PokeSprites {
   String? backDefault;
   String? backFemale;
   String? backShiny;
@@ -285,7 +288,7 @@ class Sprites {
   Other? other;
   Versions? versions;
 
-  Sprites(
+  PokeSprites(
       {this.backDefault,
       this.backFemale,
       this.backShiny,
@@ -297,7 +300,7 @@ class Sprites {
       this.other,
       this.versions});
 
-  Sprites.fromJson(Map<String, dynamic> json) {
+  PokeSprites.fromJson(Map<String, dynamic> json) {
     backDefault = json['back_default'];
     backFemale = json['back_female'];
     backShiny = json['back_shiny'];
@@ -975,17 +978,17 @@ class GenerationViii {
   }
 }
 
-class Stats {
+class PokeStats {
   int? baseStat;
   int? effort;
-  Ability? stat;
+  PokeAbility? stat;
 
-  Stats({this.baseStat, this.effort, this.stat});
+  PokeStats({this.baseStat, this.effort, this.stat});
 
-  Stats.fromJson(Map<String, dynamic> json) {
+  PokeStats.fromJson(Map<String, dynamic> json) {
     baseStat = json['base_stat'];
     effort = json['effort'];
-    stat = json['stat'] != null ? new Ability.fromJson(json['stat']) : null;
+    stat = json['stat'] != null ? new PokeAbility.fromJson(json['stat']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -999,15 +1002,15 @@ class Stats {
   }
 }
 
-class Types {
+class PokeTypes {
   int? slot;
-  Ability? type;
+  PokeAbility? type;
 
-  Types({this.slot, this.type});
+  PokeTypes({this.slot, this.type});
 
-  Types.fromJson(Map<String, dynamic> json) {
+  PokeTypes.fromJson(Map<String, dynamic> json) {
     slot = json['slot'];
-    type = json['type'] != null ? new Ability.fromJson(json['type']) : null;
+    type = json['type'] != null ? new PokeAbility.fromJson(json['type']) : null;
   }
 
   Map<String, dynamic> toJson() {

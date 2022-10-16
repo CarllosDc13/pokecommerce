@@ -17,12 +17,19 @@ class AppController extends ChangeNotifier {
   PokeGenericResponse pokeGenericResponse = PokeGenericResponse();
   List<Pokeinfo> pokeinfos = [];
 
-  alterTheme(ThemeType type_) {
-    themeDefault.alterTheme(type_);
+  alterTheme(ThemeType? type_) {
+    themeDefault.alterTheme(type_ ?? ThemeType.poke);
+    storage.setItem('ThemeType', type_);
     notifyListeners();
   }
 
   getLinks({int offset = 0, int limit = 100}) async {
+    if (storage.getItem('app_init') == null) {
+      return;
+    }
+
+    print(storage.getItem('app_init'));
+
     var response =
         await _apiRepository.getPokemons(offset: offset, limit: limit);
     pokeGenericResponse =
@@ -38,15 +45,17 @@ class AppController extends ChangeNotifier {
       return;
     }
 
-    List<Pokeinfo> pkInfos = (await storage.getItem('pokeinfos') as List).map((obj) => Pokeinfo.fromJson(obj)).toList();
+    print(storage.getItem('pokeinfos'));
+    List<Pokeinfo> pkInfos = (storage.getItem('pokeinfos') as List)
+        .map((obj) => Pokeinfo.fromJson(obj))
+        .toList();
     pkInfos = await getPokeinfosByUrl(pokeGenericResponse.results
             ?.sublist(0, 20)
-            .where((element) => pkInfos.any((pkIf) => element.name != pkIf.name))
+            .where(
+                (element) => !pkInfos.any((pkIf) => element.name != pkIf.name))
             .map((e) => e.url)
             .toList() ??
         []);
-
-    print('pkInfos');
 
     await storage.setItem('pokeinfos', pkInfos);
     await storage.setItem('pokemons', pokeGenericResponse);
