@@ -22,7 +22,7 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    if (AppController.instance.pokeGenericResponse.count  == 0) {
+    if (AppController.instance.pokeGenericResponse.count == 0) {
       AppController.instance.getLinks();
     }
 
@@ -88,8 +88,10 @@ class ItemEcommerce extends StatelessWidget {
                     margin: const EdgeInsets.fromLTRB(5, 10, 5, 10),
                     child: Text(
                       name.capitalize ?? '',
-                      style: const TextStyle(
-                          fontSize: 23, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                          color: AppController.instance.themeDefault.colorText,
+                          fontSize: 23,
+                          fontWeight: FontWeight.w600),
                     )),
                 Row(
                     children: pkTypes?.map((type) {

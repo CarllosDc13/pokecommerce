@@ -17,9 +17,9 @@ class AppController extends ChangeNotifier {
   PokeGenericResponse pokeGenericResponse = PokeGenericResponse();
   List<Pokeinfo> pokeinfos = [];
 
-  alterTheme(ThemeType? type_) {
+  alterTheme(ThemeType? type_) async {
     themeDefault.alterTheme(type_ ?? ThemeType.poke);
-    storage.setItem('ThemeType', type_);
+    await storage.setItem('ThemeType', type_.toString());
     notifyListeners();
   }
 
